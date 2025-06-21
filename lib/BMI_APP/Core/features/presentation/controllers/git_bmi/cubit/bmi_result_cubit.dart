@@ -2,12 +2,21 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:first_app/BMI_APP/Core/features/data/api/api_constants.dart';
 import 'package:first_app/BMI_APP/Core/features/data/model/bmi_data_model.dart';
 import 'package:first_app/BMI_APP/Core/features/data/model/bmi_model.dart';
 import 'package:first_app/BMI_APP/Core/features/presentation/controllers/git_bmi/cubit/bmi_result_state.dart';
 
 class BmiResultCubit extends Cubit<BmiResultState> {
-  BmiResultCubit() : super(BmiResInitial());
+  BmiResultCubit() : super(BmiResInitial()) {
+    _dio = Dio(
+      BaseOptions(
+        headers: {'x-api-key': ApiConstants.apiKey},
+      ),
+    );
+  }
+
+  late final Dio _dio;
 
   Future<void> getBmiRes({
     required String height,
@@ -19,41 +28,40 @@ class BmiResultCubit extends Cubit<BmiResultState> {
     try {
       emit(BmiResLoading());
 
-      var dio = Dio();
-      dio.options.headers = {
-        "x-api-key": "487de323-657a-404b-8d2e-a1ba3d111688",
-      };
-
-      var response = await dio.get(
-        'https://api.apiverve.com/v1/bmicalculator?weight=$weight&height=$height&unit=$unit',
+      final response = await _dio.get(
+        ApiConstants.baseUrl,
+        queryParameters: {
+          'weight': weight,
+          'height': height,
+          'unit': unit,
+        },
       );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> jsonData;
-
+        Map<String, dynamic> responseData;
         if (response.data is String) {
-          jsonData = json.decode(response.data);
+          responseData = json.decode(response.data);
         } else if (response.data is Map<String, dynamic>) {
-          jsonData = response.data;
+          responseData = response.data;
         } else {
-          emit(BmiResError('Unexpected data type from API'));
+          emit(BmiResError('Unexpected API response format'));
           return;
         }
-
-        var model = BmiModel.fromJson(jsonData);
+        final model = BmiModel.fromJson(responseData);
 
         if (model.status == 'ok' && model.data != null) {
-          var bmiData = BmiDataModel.fromJson(model.data!);
-
+          final bmiData = BmiDataModel.fromJson(model.data!);
           emit(BmiResSuccess(bmiModel: bmiData, gender: gender, name: name));
         } else {
-          emit(BmiResError('Failed to get BMI data from server'));
+          emit(BmiResError('Failed to get BMI data: ${model.message ?? 'Unknown error'}'));
         }
       } else {
         emit(BmiResError('Server error: ${response.statusCode}'));
       }
+    } on DioException catch (e) {
+      emit(BmiResError('Network Error: ${e.message}'));
     } catch (e) {
-      emit(BmiResError('Error: $e'));
+      emit(BmiResError('An unexpected error occurred: $e'));
     }
   }
 }

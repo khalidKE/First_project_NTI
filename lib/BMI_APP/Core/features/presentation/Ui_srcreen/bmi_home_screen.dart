@@ -107,12 +107,11 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder:
-                  (context) => BmiResult(
-                    bmiModel: state.bmiModel,
-                    gender: state.gender,
-                    name: state.name,
-                  ),
+              builder: (context) => BmiResult(
+                bmiModel: state.bmiModel,
+                gender: state.gender,
+                name: state.name,
+              ),
             ),
           );
         } else if (state is BmiResError) {
@@ -130,20 +129,19 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
           centerTitle: true,
           backgroundColor: AppColor.lightBlue,
         ),
-        body: Form(
-          key: _formKey,
-          child: BlocBuilder<BmiResultCubit, BmiResultState>(
-            builder: (context, state) {
-              return SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
-                child: SizedBox(
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: BlocBuilder<BmiResultCubit, BmiResultState>(
+              builder: (context, state) {
+                return SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: Column(
                       children: [
-                        SizedBox(height: 35),
+                        SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [Text('Name')],
@@ -211,7 +209,7 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
                               gender: 'male',
                               label: 'Male',
                             ),
-                            SizedBox(width: 60),
+                            SizedBox(width: 50),
                             _buildGenderSelection(
                               imagePath: AppImage.femaleImage,
                               gender: 'female',
@@ -219,7 +217,7 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 21),
+                        SizedBox(height: 20),
                         Row(
                           children: [
                             Text(
@@ -237,7 +235,7 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
                           onIncrement: _incrementHeight,
                           onDecrement: _decrementHeight,
                         ),
-                        SizedBox(height: 21),
+                        SizedBox(height: 20),
                         Row(
                           children: [
                             Text(
@@ -255,7 +253,7 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
                           onIncrement: _incrementWeight,
                           onDecrement: _decrementWeight,
                         ),
-                        Spacer(),
+                        SizedBox(height: 25),
                         GestureDetector(
                           onTap: state is BmiResLoading ? null : _calculateBMI,
                           child: Container(
@@ -265,10 +263,9 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
                               vertical: 15,
                             ),
                             decoration: BoxDecoration(
-                              color:
-                                  state is BmiResLoading
-                                      ? Colors.grey
-                                      : AppColor.purpl2,
+                              color: state is BmiResLoading
+                                  ? Colors.grey
+                                  : AppColor.purpl2,
                               borderRadius: BorderRadius.all(
                                 Radius.circular(10),
                               ),
@@ -295,13 +292,12 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 90),
                       ],
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -327,7 +323,7 @@ class _BmiHomeScreenState extends State<BmiHomeScreen> {
             value: gender,
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 5),
         Text(
           label,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
