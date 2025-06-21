@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  final TextEditingController controller; // أضف final هنا
-  final String? hintText; // أضف hintText اختياري
+  final TextEditingController controller; 
+  final String? hintText; 
 
   const CustomTextFormField({
     super.key,
-    required this.controller, // غير ده
-    this.hintText, // أضف ده
+    required this.controller, 
+    this.hintText, 
   });
 
   @override
@@ -27,13 +27,13 @@ class CustomTextFormField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
-        controller: controller, // أضف السطر ده - ده المهم!
+        controller: controller, 
         decoration: InputDecoration(
           filled: true,
           fillColor: Color(0xFFF5F8FF),
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           border: InputBorder.none,
-          hintText: hintText ?? 'Enter text', // استخدم hintText المُمرر
+          hintText: hintText ?? 'Enter text',
           hintStyle: TextStyle(
             color: Colors.grey[400],
           ),

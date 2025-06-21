@@ -7,14 +7,10 @@ void main() {
   runApp(const FirstApp());
 }
 
-/// we use context to access the widget tree
-/// and to get the current state of the widget
 class FirstApp extends StatelessWidget {
   const FirstApp({super.key});
 
-  // const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
